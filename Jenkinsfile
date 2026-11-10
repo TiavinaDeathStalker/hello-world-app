@@ -17,7 +17,7 @@ pipeline {
             steps { bat 'mvn package -DskipTests' }
         }
         stage('Build the docker image') {
-            steps { bat 'wsl docker build --tag TON_USER_DOCKERHUB/hello-world-app:1.0.0 .' }
+            steps { bat 'wsl docker build --tag tiavinarat/hello-world-app:1.0.0 .' }
         }
         stage('Push to DockerHub') {
             steps {
@@ -32,7 +32,7 @@ pipeline {
         failure {
             emailext body: 'Ce Build $BUILD_NUMBER a échoué',
                      subject: 'Build échoué',
-                     to: 'ton.email@gmail.com'
+                     to: 'tiavinaratovonanahary@gmail.com'
         }
     }
 }
