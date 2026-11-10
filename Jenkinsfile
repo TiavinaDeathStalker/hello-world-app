@@ -8,7 +8,7 @@ pipeline {
             }
         }
         stage('Compile') {
-            steps { bat 'mvn clean comple' }
+            steps { bat 'mvn clean compile' }
         }
         stage('Unit Test Execution') {
             steps { bat 'mvn test' }
