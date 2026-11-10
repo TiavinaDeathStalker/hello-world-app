@@ -23,7 +23,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
                     bat 'echo %DH_PASS%| wsl docker login -u %DH_USER% --password-stdin'
-                    bat 'wsl docker push TON_USER_DOCKERHUB/hello-world-app:1.0.0'
+                    bat 'wsl docker push tiavinarat/hello-world-app:1.0.0'
                 }
             }
         }
