@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    tools { maven 'Maven' }
+    stages {
+        stage('git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/TiavinaDeathStalker/hello-world-app.git'
+            }
+        }
+        stage('Compile') {
+            steps { bat 'mvn clean compile' }
+        }
+        stage('Unit Test Execution') {
+            steps { bat 'mvn test' }
+        }
+        stage('Package') {
+            steps { bat 'mvn package -DskipTests' }
+        }
+        stage('Build the docker image') {
+            steps { bat 'wsl docker build --tag TON_USER_DOCKERHUB/hello-world-app:1.0.0 .' }
+        }
+        stage('Push to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+                    bat 'echo %DH_PASS%| wsl docker login -u %DH_USER% --password-stdin'
+                    bat 'wsl docker push TON_USER_DOCKERHUB/hello-world-app:1.0.0'
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            emailext body: 'Ce Build $BUILD_NUMBER a échoué',
+                     subject: 'Build échoué',
+                     to: 'ton.email@gmail.com'
+        }
+    }
+}
